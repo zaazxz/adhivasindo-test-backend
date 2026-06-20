@@ -4,7 +4,7 @@ Backend API for an e-commerce / online shop application created to fulfill the t
 
 This repository only contains the source code for the backend. The frontend source code can be accessed at the following link:
 
-👉 **Frontend Repository**: [Insert Frontend Link Here]
+👉 **Frontend Repository**: [https://github.com/zaazxz/adhivasindo-test-frontend](https://github.com/zaazxz/adhivasindo-test-frontend)
 
 ---
 
@@ -26,7 +26,7 @@ The complete API documentation has been exported as a **Postman Collection** to 
 You can access and use it by following these steps:
 
 1. Open the `public/docs/` folder in this project directory.
-2. Find the file named `API-Documentation-Online-Shop-Adhivasindo.postman_collection.json`.
+2. Find the file named `BE_ONLINE_SHOP_ADHIVASINDO.postman_collection.json`.
 3. Open the **Postman** application, then click the **Import** button.
 4. Select (or _drag-and-drop_) the JSON file.
 5. The collection, along with all endpoints and environment variables, will automatically be available in your Postman workspace and ready to use.

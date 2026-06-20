@@ -1,0 +1,1121 @@
+{
+  "info": {
+    "_postman_id": "e57e5345-094e-44e3-8b44-b82873339701",
+    "name": "BE_ONLINE_SHOP_ADHIVASINDO",
+    "description": "# BE_ONLINE_SHOP_ADHIVASINDO\n\nAPI documentation for the **Online Shop Adhivasindo** backend application. This API is built with **Laravel** and uses **JWT (JSON Web Token)**-based authentication.\n\n---\n\n## 🚀 Getting Started\n\nFollow these steps in order to use all endpoints correctly:\n\n1. **Make sure the server is running** at `http://localhost:8000`\n2. **Set the environment** to `Online Shop Adhivasindo` (or the appropriate environment)\n3. **REGISTER** or **LOGIN** first — the JWT token will be automatically saved to the `{{token}}` variable\n4. Once logged in, all endpoints that require authentication are ready to use\n\n---\n\n## 🔐 Authentication\n\nAll endpoints (except `REGISTER` and `LOGIN`) require a **Bearer Token** in the header:\n\n```\nAuthorization: Bearer {{token}}\n```\n\nThis token is automatically saved to the `{{token}}` environment variable after a successful login.\n\n---\n\n## 📌 Important Note on IDs\n\n> ⚠️ **All IDs in this API use UUID format** (example: `a1b2c3d4-e5f6-7890-1234-567890abcdef`)\n\nUUIDs **cannot be guessed or made up**. Here's how to get the correct IDs:\n- **`type_id`** → Get it from the `GET /product-types` endpoint response (PRODUCT_TYPES folder)\n- **`product_id`** → Get it from the `GET /products/` or `POST /products/` endpoint response (PRODUCTS folder)\n- **`order_id`** → Get it from the `GET /orders/` or `POST /orders/` endpoint response (ORDERS folder)\n\n---\n\n## 📂 Collection Structure\n\n| Folder | Purpose |\n|---|---|\n| `API_CHECKING` | Check whether the API server is running |\n| `AUTHENTICATION` | Register, login, view profile, refresh token, logout |\n| `PRODUCT_TYPES` | Manage product types / categories |\n| `PRODUCTS` | Manage products (including image upload) |\n| `ORDERS` | Manage orders / checkout |\n\n---\n\n## 🌐 Base URL\n\n```\nhttp://localhost:8000/api\n```\n\nUse the `{{apiUrl}}` variable in your environment to easily switch the base URL.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29572339"
+  },
+  "item": [
+    {
+      "name": "API_CHECKING",
+      "item": [
+        {
+          "name": "HEALTH_CHECK",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                ""
+              ]
+            },
+            "description": "Checks whether the API server is running normally. No authentication required.\n\n**Endpoint:** `GET {{apiUrl}}/`\n\n**Auth:** Not required\n\n**Success Response (200 OK):**\n```json\n{\n    \"message\": \"API is running\"\n}\n```\n\n> ✅ A 200 response means the server is active and ready to use.\n> ❌ If there is no response or a connection error, make sure the Laravel server is running (`php artisan serve`)."
+          },
+          "response": []
+        }
+      ],
+      "description": "This folder contains the endpoint to check whether the API server is running normally (health check). Use this endpoint before making any other requests to confirm the server is active."
+    },
+    {
+      "name": "AUTHENTICATION",
+      "item": [
+        {
+          "name": "REGISTER",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "if (pm.response.code === 200 && response.access_token) {\r",
+                  "    pm.environment.set(\"token\", response.access_token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"test@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"password_confirmation\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registers a new user account in the system.\n\n**Endpoint:** `POST {{apiUrl}}/auth/register`\n\n**Auth:** Not required\n\n**Body (JSON):**\n```json\n{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| name | string | Yes | Full name of the user |\n| email | string | Yes | Email address (must be unique) |\n| password | string | Yes | Password, minimum 8 characters |\n| password_confirmation | string | Yes | Must match the `password` field |\n\n**Success Response (201):** Account created successfully. Proceed with `LOGIN` to obtain a token."
+          },
+          "response": []
+        },
+        {
+          "name": "LOGIN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "if (pm.response.code === 200 && response.access_token) {\r",
+                  "    pm.environment.set(\"token\", response.access_token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"12345678\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Signs in to the system using email and password. On success, the JWT token is automatically saved to the `{{token}}` variable.\n\n**Endpoint:** `POST {{apiUrl}}/auth/login`\n\n**Auth:** Not required\n\n**Body (JSON):**\n```json\n{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| email | string | Yes | Registered email address |\n| password | string | Yes | Account password |\n\n**Success Response (200):** JWT token is returned and automatically saved to `{{token}}`.\n\n> ✅ After a successful login, you can immediately use all other endpoints that require authentication."
+          },
+          "response": []
+        },
+        {
+          "name": "ME",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/auth/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Retrieves the profile data of the currently logged-in user based on the active JWT token.\n\n**Endpoint:** `GET {{apiUrl}}/auth/me`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Success Response (200):** Returns the user's profile data such as `id`, `name`, `email`, and other information.\n\n> 💡 Use this endpoint to verify that your token is still valid and to retrieve the currently active user's data."
+          },
+          "response": []
+        },
+        {
+          "name": "REFRESH_TOKEN",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "if (pm.response.code === 200 && response.access_token) {\r",
+                  "    pm.environment.set(\"token\", response.access_token);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "Refreshes an expired or soon-to-expire JWT token without requiring a new login. The old token is replaced with a new one that is automatically saved to the `{{token}}` variable.\n\n**Endpoint:** `POST {{apiUrl}}/auth/refresh`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body:** Not required\n\n**Success Response (200):** A new token is returned and automatically replaces the existing `{{token}}`.\n\n> ⏰ Use this endpoint when you receive a `401 Unauthorized` error due to an expired token, so you don't have to log in again from scratch."
+          },
+          "response": []
+        },
+        {
+          "name": "LOGOUT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    pm.environment.unset(\"token\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Logs out of the system and invalidates the currently active JWT token. The `{{token}}` variable is automatically cleared after a successful logout.\n\n**Endpoint:** `POST {{apiUrl}}/auth/logout`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body:** Not required\n\n**Success Response (200):** Token successfully invalidated on the server side.\n\n> ⚠️ After logging out, the old token can no longer be used. You must `LOGIN` again to obtain a new token."
+          },
+          "response": []
+        }
+      ],
+      "description": "This folder contains all endpoints related to user authentication, including registration, login, viewing your profile, refreshing the token, and logging out.\n\n**Recommended usage order:**\n1. `REGISTER` — create a new account (if you don't have one)\n2. `LOGIN` — sign in and receive a JWT token\n3. `ME` — check your profile data\n4. `REFRESH_TOKEN` — renew the token before it expires\n5. `LOGOUT` — sign out and invalidate the token\n\n> 🔑 After a successful `LOGIN`, the JWT token is automatically saved to the `{{token}}` variable and can be used immediately across all other endpoints."
+    },
+    {
+      "name": "PRODUCT_TYPES",
+      "item": [
+        {
+          "name": "GET_PRODUCTS",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/product-types",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "product-types"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "search",
+                  "value": "Snack & Cemilan",
+                  "description": "Type Name",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves a list of all available product types.\n\n**Endpoint:** `GET {{apiUrl}}/product-types`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Success Response (200):** Returns an array of all product types. Each item contains an `id` (UUID) and a `name`.\n\n> 📋 **Save the UUID from this response!** That UUID is used as the `type_id` when creating or editing products in the PRODUCTS folder. UUIDs cannot be guessed — they must be taken from this endpoint's response."
+          },
+          "response": []
+        },
+        {
+          "name": "POST_PRODUCT",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"type_name\": \"Snack\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/product-types",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "product-types"
+              ]
+            },
+            "description": "Adds a new product type to the system.\n\n**Endpoint:** `POST {{apiUrl}}/product-types`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body (JSON):**\n```json\n{\n    \"name\": \"Food\"\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| name | string | Yes | Name of the product type / category |\n\n**Success Response (201):** New product type created successfully. The response includes the `id` (UUID) of the newly created product type.\n\n> 💡 Save the UUID from this response if you want to use it immediately as a `type_id` when creating a product."
+          },
+          "response": []
+        },
+        {
+          "name": "EDIT_PRODUCT",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"type_name\": \"Snack & Cemilan\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/product-types/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "product-types",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "a21167ed-96c5-4d4d-bea1-9a952cb7ae5b",
+                  "description": "Product ID"
+                }
+              ]
+            },
+            "description": "Updates the name of an existing product type by its ID.\n\n**Endpoint:** `PATCH {{apiUrl}}/product-types/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameter:**\n| Parameter | Description |\n|---|---|\n| id | UUID of the product type to update. Get it from the `GET_PRODUCTS` response in this folder. |\n\n> ⚠️ **ID uses UUID format.** Example: `a1b2c3d4-e5f6-7890-1234-567890abcdef`. Do not make up a UUID — always get it from the `GET_PRODUCTS` response.\n\n**Body (JSON):**\n```json\n{\n    \"name\": \"Beverage\"\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| name | string | Yes | New name for the product type |\n\n**Success Response (200):** Returns the updated product type data."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE_PRODUCT",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/product-types/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "product-types",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "a21167ed-96c5-4d4d-bea1-9a952cb7ae5b",
+                  "description": "Product ID"
+                }
+              ]
+            },
+            "description": "Deletes a product type by its ID.\n\n**Endpoint:** `DELETE {{apiUrl}}/product-types/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameter:**\n| Parameter | Description |\n|---|---|\n| id | UUID of the product type to delete. Get it from the `GET_PRODUCTS` response in this folder. |\n\n> ⚠️ **ID uses UUID format.** Do not make up a UUID — always get it from the `GET_PRODUCTS` response.\n\n> 🚨 **Warning:** Deleting a product type may affect products that are currently using it. Make sure no active products are still assigned to this type before deleting.\n\n**Success Response (200):** Product type deleted successfully."
+          },
+          "response": []
+        }
+      ],
+      "description": "This folder contains endpoints for managing **product types / categories**. Product types are used as categories when creating or editing products.\n\n> 📌 **Important:** Each product type has a UUID-formatted ID. This ID is required when creating or editing products in the PRODUCTS folder. Always retrieve the `type_id` from the `GET_PRODUCTS` endpoint response in this folder.\n\n**Recommended usage order:**\n1. `GET_PRODUCTS` — view all available product types and note their UUIDs\n2. `POST_PRODUCT` — add a new product type\n3. `EDIT_PRODUCT` — update the name of an existing product type\n4. `DELETE_PRODUCT` — remove a product type\n\n**Auth:** All endpoints in this folder require a Bearer Token (`{{token}}`)."
+    },
+    {
+      "name": "PRODUCTS",
+      "item": [
+        {
+          "name": "GET_PRODUCTS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/products/?status=active",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "products",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "teh",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "type": "text"
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "disabled": true
+                },
+                {
+                  "key": "type_id",
+                  "value": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                  "description": "Product Type (ID)",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves a list of all products. Supports filtering by status and searching by name.\n\n**Endpoint:** `GET {{apiUrl}}/products/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Query Parameters:**\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| status | string | No | Filter by status: `active`, `inactive`, `draft`, `out_of_stock`, `low_stock` |\n| search | string | No | Search products by name |\n| per_page | integer | No | Number of results per page (e.g. `10`) |\n| page | integer | No | Page number for pagination |\n\n**Example:** `GET {{apiUrl}}/products/?status=active`\n\n**Success Response (200):** Returns a paginated list of products. Each product has an `id` field (UUID).\n\n> 📋 **Save the UUID from this response!** That UUID is used as the `product_id` in the `GET_PRODUCT`, `EDIT_PRODUCT`, and `DELETE_PRODUCT` endpoints."
+          },
+          "response": []
+        },
+        {
+          "name": "GET_PRODUCT",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/products/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "a2115d68-eca2-4603-bfa2-20876de2c699",
+                  "description": "Product Id"
+                }
+              ]
+            },
+            "description": "Retrieves the full details of a single product by its ID.\n\n**Endpoint:** `GET {{apiUrl}}/products/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameter:**\n| Parameter | Description |\n|---|---|\n| id | UUID of the product to view. Use `{{product_id}}` or get it from the `GET_PRODUCTS` response. |\n\n> ⚠️ **ID uses UUID format.** Example: `a1b2c3d4-e5f6-7890-1234-567890abcdef`. Do not make up a UUID — always get it from the `GET_PRODUCTS` response.\n\n**Success Response (200):** Returns the full product data including name, price, stock, status, product type, and image URL (if any)."
+          },
+          "response": []
+        },
+        {
+          "name": "CREATE_PRODUCT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Indomie Rebus",
+                  "type": "text",
+                  "uuid": "0ffe9cfa-6481-43a8-93c7-a397781da412"
+                },
+                {
+                  "key": "desc",
+                  "value": "",
+                  "description": "optional",
+                  "type": "text",
+                  "uuid": "ee96895b-8cd3-49ab-bb97-7b0240262e2e"
+                },
+                {
+                  "key": "price",
+                  "value": "3500",
+                  "type": "text",
+                  "uuid": "91ee8612-3a54-4275-8b18-0830cf1171ef"
+                },
+                {
+                  "key": "stock",
+                  "value": "10",
+                  "description": "optional (default '0')",
+                  "type": "text",
+                  "uuid": "518852e9-10ef-43fd-a151-9fc6cba1fbf3"
+                },
+                {
+                  "key": "status",
+                  "value": "draft",
+                  "description": "optional (default 'draft')",
+                  "type": "text",
+                  "uuid": "1bb5fcb4-136b-423f-81b0-d0d962550a9f"
+                },
+                {
+                  "key": "image",
+                  "description": "optional",
+                  "type": "file",
+                  "uuid": "c9f7deae-3779-4100-8e3a-0a2c220523aa",
+                  "src": "/C:/Users/Admin/Downloads/fintra-theme.jpg"
+                },
+                {
+                  "key": "type_id",
+                  "value": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                  "type": "text",
+                  "uuid": "a7715f83-aa86-48d5-85cf-f1851bd5253c"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/products/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "products",
+                ""
+              ]
+            },
+            "description": "Creates a new product. On success, the new product's ID is automatically saved to the `{{product_id}}` variable.\n\n**Endpoint:** `POST {{apiUrl}}/products/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n---\n\n### Why form-data instead of JSON?\n\nThis endpoint uses **multipart/form-data** (not JSON) because it supports uploading a product image file. JSON format cannot be used to send binary files like images. With form-data, you can send both text fields and files in a single request.\n\n---\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| name | string | Yes | Product name |\n| price | number | Yes | Product price |\n| type_id | string | Yes | UUID of the product type. Get it from `GET_PRODUCTS` in the PRODUCT_TYPES folder. Use `{{type_id}}` |\n| desc | string | No | Product description |\n| stock | integer | No | Stock quantity (default: `0`) |\n| status | string | No | Product status: `draft`, `active`, `inactive` (default: `draft`) |\n| image | file | No | Product image file |\n\n> ⚠️ **`type_id` uses UUID format** and must be retrieved from the `GET_PRODUCTS` endpoint in the PRODUCT_TYPES folder. Do not make up a UUID.\n\n**Success Response (201):** Product created successfully. The new product's ID is automatically saved to `{{product_id}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "EDIT_PRODUCT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Indomie Rebus",
+                  "type": "text",
+                  "uuid": "0ffe9cfa-6481-43a8-93c7-a397781da412",
+                  "disabled": true
+                },
+                {
+                  "key": "desc",
+                  "value": "Indomie Rebus rasa Ayam Bawang",
+                  "description": "optional",
+                  "type": "text",
+                  "uuid": "ee96895b-8cd3-49ab-bb97-7b0240262e2e"
+                },
+                {
+                  "key": "price",
+                  "value": "3500",
+                  "type": "text",
+                  "uuid": "91ee8612-3a54-4275-8b18-0830cf1171ef",
+                  "disabled": true
+                },
+                {
+                  "key": "stock",
+                  "value": "10",
+                  "description": "optional (default '0')",
+                  "type": "text",
+                  "uuid": "518852e9-10ef-43fd-a151-9fc6cba1fbf3",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "description": "optional (default 'draft')",
+                  "type": "text",
+                  "uuid": "1bb5fcb4-136b-423f-81b0-d0d962550a9f"
+                },
+                {
+                  "key": "image",
+                  "description": "optional",
+                  "type": "file",
+                  "uuid": "c9f7deae-3779-4100-8e3a-0a2c220523aa",
+                  "src": "/C:/Users/Admin/Downloads/fintra-pallete.jpg"
+                },
+                {
+                  "key": "_method",
+                  "value": "PATCH",
+                  "description": "patch/put",
+                  "type": "text",
+                  "uuid": "6284bf08-fc0b-45cd-884d-b36d3cc69017"
+                },
+                {
+                  "key": "type_id",
+                  "value": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+                  "type": "text",
+                  "uuid": "6bf2c6f7-c736-465a-9117-7679d0c9ee08",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/products/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "a2116fb1-32a2-4332-b5b5-86b7e729bcec",
+                  "description": "Product Id"
+                }
+              ]
+            },
+            "description": "Updates an existing product by its ID.\n\n**Endpoint:** `POST {{apiUrl}}/products/:id` (with `_method: PATCH`)\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameter:**\n| Parameter | Description |\n|---|---|\n| id | UUID of the product to update. Use `{{product_id}}` or get it from the `GET_PRODUCTS` response. |\n\n> ⚠️ **ID uses UUID format.** Do not make up a UUID — always get it from the `GET_PRODUCTS` response.\n\n---\n\n### Why form-data instead of JSON?\n\nThis endpoint uses **multipart/form-data** (not JSON) because it supports uploading or replacing a product image file. JSON format cannot be used to send binary files like images. With form-data, you can send both text fields and files in a single request.\n\n---\n\n### ⚠️ Notes: Method Spoofing with `_method`\n\nBecause form-data with file uploads can only be sent via `POST`, while Laravel expects the `PATCH` method for updates, **method spoofing** is used.\n\nHow it works: add a `_method` field with the value `PATCH` in the form-data body. Laravel will read this field and treat the request as if it were sent with the `PATCH` method.\n\n> 🔴 **Required:** The `_method: PATCH` field must always be present in the body. Without it, the request will fail or not be processed correctly by Laravel.\n\n---\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| _method | string | **Yes** | Must be set to `PATCH` (for Laravel method spoofing) |\n| name | string | No | Updated product name |\n| price | number | No | Updated product price |\n| type_id | string | No | Updated product type UUID |\n| desc | string | No | Updated product description |\n| stock | integer | No | Updated stock quantity |\n| status | string | No | Updated status: `active`, `inactive`, `draft` |\n| image | file | No | New product image file |\n\n**Success Response (200):** Returns the updated product data."
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE_PRODUCT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/products/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "a2116fb1-32a2-4332-b5b5-86b7e729bcec",
+                  "description": "Product Id"
+                }
+              ]
+            },
+            "description": "Deletes a product by its ID. On success, the `{{product_id}}` variable is automatically cleared.\n\n**Endpoint:** `DELETE {{apiUrl}}/products/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameter:**\n| Parameter | Description |\n|---|---|\n| id | UUID of the product to delete. Use `{{product_id}}` or get it from the `GET_PRODUCTS` response. |\n\n> ⚠️ **ID uses UUID format.** Do not make up a UUID — always get it from the `GET_PRODUCTS` response.\n\n> 🚨 **Warning:** Product deletion is permanent. Make sure the product is not currently referenced in any active orders before deleting.\n\n**Success Response (200):** Product deleted successfully."
+          },
+          "response": []
+        }
+      ],
+      "description": "This folder contains endpoints for managing **products** in the online shop, including listing products, viewing product details, creating new products, editing, and deleting products.\n\n> 📌 **Important:** Each product has a UUID-formatted ID. Always retrieve the `product_id` from the `GET_PRODUCTS` or `CREATE_PRODUCT` endpoint response.\n\n> 🖼️ **Image Upload Note:** The `CREATE_PRODUCT` and `EDIT_PRODUCT` endpoints use **form-data** (not JSON) because they support uploading a product image file. JSON format cannot be used to send files.\n\n**Recommended usage order:**\n1. `GET_PRODUCTS` — view all products\n2. `GET_PRODUCT` — view details of a single product\n3. `CREATE_PRODUCT` — add a new product (with or without an image)\n4. `EDIT_PRODUCT` — update an existing product\n5. `DELETE_PRODUCT` — remove a product\n\n**Auth:** All endpoints in this folder require a Bearer Token (`{{token}}`)."
+    },
+    {
+      "name": "ORDERS",
+      "item": [
+        {
+          "name": "CHECKOUT",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"payment_method\": \"cash\",\r\n    \"items\": [\r\n        {\r\n            \"product_id\": \"a2115d68-eca2-4603-bfa2-20876de2c699\",\r\n            \"quantity\": 5\r\n        },\r\n        {\r\n            \"product_id\": \"a2115d68-f149-43b4-a92a-eb131bc1cfc4\",\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/orders/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "orders",
+                ""
+              ]
+            },
+            "description": "Places a new order (checkout). On success, the new order's ID is automatically saved to the `{{order_id}}` variable.\n\n**Endpoint:** `POST {{apiUrl}}/orders/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body (JSON):**\n```json\n{\n    \"payment_method\": \"cash\",\n    \"items\": [\n        {\n            \"product_id\": \"{{product_id_active}}\",\n            \"quantity\": 2\n        }\n    ]\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| payment_method | string | Yes | Payment method (e.g. `cash`) |\n| items | array | Yes | List of products to order |\n| items[].product_id | string | Yes | UUID of the product. Get it from `GET_PRODUCTS` in the PRODUCTS folder. |\n| items[].quantity | integer | Yes | Quantity to order |\n\n> ⚠️ **`product_id` uses UUID format** and must be retrieved from the `GET_PRODUCTS` endpoint in the PRODUCTS folder. Do not make up a UUID.\n\n> 💡 You can order more than one product at a time by adding more items to the `items` array.\n\n**Success Response (201):** Order placed successfully. The new order's ID is automatically saved to `{{order_id}}`."
+          },
+          "response": []
+        },
+        {
+          "name": "UPDATE_STATUS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"paid\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/orders/:id/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "orders",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "a211738b-d051-4993-892a-40ed21630136"
+                }
+              ]
+            },
+            "description": "Updates the status of an existing order by its ID. Use this endpoint to transition an order through its lifecycle (e.g. from `pending` to `paid`).\n\n**Endpoint:** `PATCH {{apiUrl}}/orders/:id/status`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameter:**\n| Parameter | Description |\n|---|---|\n| id | UUID of the order to update. Use `{{order_id}}` or get it from the `GET_ORDERS` response. |\n\n> ⚠️ **ID uses UUID format.** Do not make up a UUID — always get it from the `GET_ORDERS` or `CHECKOUT` response.\n\n**Body (JSON):**\n```json\n{\n    \"status\": \"paid\"\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| status | string | Yes | New order status (e.g. `pending`, `paid`, `cancelled`) |\n\n**Success Response (200):** Returns the order data with the updated status."
+          },
+          "response": []
+        },
+        {
+          "name": "GET_ORDERS",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/orders/",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "orders",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "user_id",
+                  "value": "a2115d68-048e-4b6f-b08f-5d7f326214bc",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "paid",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all orders belonging to the currently logged-in user.\n\n**Endpoint:** `GET {{apiUrl}}/orders/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Query Parameters:**\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| per_page | integer | No | Number of orders per page (e.g. `10`) |\n| page | integer | No | Page number for pagination |\n\n**Success Response (200):** Returns a paginated list of orders. Each order has an `id` field (UUID).\n\n> 📋 **Save the UUID from this response!** That UUID is used as the `order_id` in the `GET_ORDER` and `UPDATE_STATUS` endpoints."
+          },
+          "response": []
+        },
+        {
+          "name": "GET_ORDER",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8000/api/orders/:id",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "orders",
+                ":id"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "type": "text",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "a211738b-d051-4993-892a-40ed21630136"
+                }
+              ]
+            },
+            "description": "Retrieves the full details of a single order by its ID.\n\n**Endpoint:** `GET {{apiUrl}}/orders/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameter:**\n| Parameter | Description |\n|---|---|\n| id | UUID of the order to view. Use `{{order_id}}` or get it from the `GET_ORDERS` response. |\n\n> ⚠️ **ID uses UUID format.** Example: `a1b2c3d4-e5f6-7890-1234-567890abcdef`. Do not make up a UUID — always get it from the `GET_ORDERS` or `CHECKOUT` response.\n\n**Success Response (200):** Returns the full order data including the list of ordered items, total price, payment method, and order status."
+          },
+          "response": []
+        }
+      ],
+      "description": "This folder contains endpoints for managing **orders** in the online shop, including placing a checkout, listing orders, viewing order details, and updating order status.\n\n> 📌 **Important:** Each order has a UUID-formatted ID. Always retrieve the `order_id` from the `GET_ORDERS` or `CHECKOUT` endpoint response.\n\n**Recommended usage order:**\n1. `CHECKOUT` — place a new order (make sure you already have a `product_id` from the PRODUCTS folder)\n2. `GET_ORDERS` — view all orders\n3. `GET_ORDER` — view details of a single order\n4. `UPDATE_STATUS` — update the status of an order\n\n**Auth:** All endpoints in this folder require a Bearer Token (`{{token}}`)."
+    }
+  ]
+}
