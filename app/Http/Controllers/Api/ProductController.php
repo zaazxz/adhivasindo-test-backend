@@ -30,7 +30,13 @@ class ProductController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $products = $query->latest()->paginate($request->get('per_page', 10));
+        // Search by type_id
+        if ($request->has('type_id')) {
+            $query->where('type_id', $request->type_id);
+        }
+
+        // Eager load product type
+        $products = $query->with('type')->latest()->paginate($request->get('per_page', 10));
         return response()->json($products);
     }
 
@@ -55,6 +61,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'type_id' => 'required|exists:product_types,id',
             'name' => 'required|string|max:255',
             'desc' => 'nullable|string',
             'price' => 'required|numeric|min:0',
@@ -67,7 +74,7 @@ class ProductController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = $request->only(['name', 'desc', 'price', 'stock', 'status']);
+        $data = $request->only(['type_id', 'name', 'desc', 'price', 'stock', 'status']);
 
         // auto set 'out of stock' if stock is 0 and status is not set
         if (!$request->has('status') && (int) $request->stock === 0) {
@@ -85,16 +92,20 @@ class ProductController extends Controller
             $data['image'] = $imageResult['path'];
         }
 
-        $product = Product::create([
-            'name' => $data['name'],
-            'desc' => $data['desc'] ?? null,
-            'price' => $data['price'],
-            'stock' => $data['stock'],
-            'image' => $data['image'] ?? null,
-            'status' => $data['status'] ?? 'draft',
-            'created_at' => Carbon::now(),
-            'updated_at' => null,
-        ]);
+        // Manual Timestamps
+        $product = new Product();
+
+        $product->type_id = $data['type_id'];
+        $product->name = $data['name'];
+        $product->desc = $data['desc'] ?? null;
+        $product->price = $data['price'];
+        $product->stock = $data['stock'];
+        $product->image = $data['image'] ?? null;
+        $product->status = $data['status'] ?? 'draft';
+        $product->timestamps = false;
+        $product->created_at = now();
+        $product->updated_at = null;
+        $product->save();
 
         return response()->json($product, 201);
     }
@@ -109,6 +120,7 @@ class ProductController extends Controller
         }
 
         $validator = Validator::make($request->all(), [
+            'type_id' => 'sometimes|required|exists:product_types,id',
             'name' => 'sometimes|required|string|max:255',
             'desc' => 'nullable|string',
             'price' => 'sometimes|required|numeric|min:0',
@@ -121,7 +133,7 @@ class ProductController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $data = $request->only(['name', 'desc', 'price', 'stock', 'status']);
+        $data = $request->only(['type_id', 'name', 'desc', 'price', 'stock', 'status']);
 
         // auto set 'out of stock' if stock is 0 and status is not set
         if ($request->has('stock') && !$request->has('status') && (int) $request->stock === 0) {
@@ -141,17 +153,22 @@ class ProductController extends Controller
             $data['image'] = $imageResult['path'];
         }
 
-        // update
-        $product->update([
-            'name' => $data['name'] ?? $product->name,
-            'desc' => $data['desc'] ?? $product->desc,
-            'price' => $data['price'] ?? $product->price,
-            'stock' => $data['stock'] ?? $product->stock,
-            'image' => $data['image'] ?? $product->image,
-            'status' => $data['status'] ?? $product->status,
-            'created_at' => $product->created_at,
-            'updated_at' => Carbon::now(),
-        ]);
+        // Custom timestamps
+        $product->timestamps = false;
+
+        // set update value
+        $product->type_id = $data['type_id'] ?? $product->type_id;
+        $product->name = $data['name'] ?? $product->name;
+        $product->desc = $data['desc'] ?? $product->desc;
+        $product->price = $data['price'] ?? $product->price;
+        $product->stock = $data['stock'] ?? $product->stock;
+        $product->image = $data['image'] ?? $product->image;
+        $product->status = $data['status'] ?? $product->status;
+        $product->created_at = $product->created_at;
+        $product->updated_at = now();
+
+        // save
+        $product->save();
 
         return response()->json($product);
     }

@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProductTypeController;
 use App\Http\Controllers\Api\MainController;
 use App\Http\Controllers\Api\ProductController;
 
@@ -34,5 +35,18 @@ Route::prefix('products')->group(function () {
 
         // Image Upload
         Route::post('/upload-image', [ProductController::class, 'uploadImage']);
+    });
+});
+
+// Product Types
+Route::prefix('product-types')->group(function () {
+    Route::middleware('optional.auth')->group(function () {
+        Route::get('/', [ProductTypeController::class, 'index']);
+    });
+
+    Route::middleware(['auth:api', 'role:admin'])->group(function () {
+        Route::post('/', [ProductTypeController::class, 'store']);
+        Route::match(['put', 'patch'], '/{id}', [ProductTypeController::class, 'update']);
+        Route::delete('/{id}', [ProductTypeController::class, 'destroy']);
     });
 });

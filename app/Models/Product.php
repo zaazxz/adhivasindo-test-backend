@@ -10,6 +10,7 @@ class Product extends Model
     use HasUuids;
 
     protected $fillable = [
+        'type_id',
         'name',
         'desc',
         'price',
@@ -21,5 +22,10 @@ class Product extends Model
     public function orderDetails()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(ProductType::class, 'type_id', 'id');
     }
 }

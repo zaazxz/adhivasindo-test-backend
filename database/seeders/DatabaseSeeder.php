@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\ProductType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -20,6 +21,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'admin',
+            'created_at' => now(),
+            'updated_at' => null,
         ]);
 
         // Customer user
@@ -28,39 +31,68 @@ class DatabaseSeeder extends Seeder
             'email' => 'customer@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'customer',
+            'created_at' => now(),
+            'updated_at' => null,
+        ]);
+
+        // Sample Product Type
+        ProductType::create([
+            'id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+            'type_name' => 'Makanan Pokok',
+            'created_at' => now(),
+            'updated_at' => null,
+        ]);
+
+        ProductType::create([
+            'id' => 'b1c2d3e4-f5g6-7890-1234-567890abcdef',
+            'type_name' => 'Soft Drink',
+            'created_at' => now(),
+            'updated_at' => null,
         ]);
 
         // Sample products
         Product::create([
+            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
             'name' => 'Indomie Goreng',
             'desc' => 'Mie instan goreng favorit semua orang',
             'price' => 3500,
             'stock' => 100,
             'status' => 'active',
+            'created_at' => now(),
+            'updated_at' => null,
         ]);
 
         Product::create([
+            'type_id' => 'b1c2d3e4-f5g6-7890-1234-567890abcdef',
             'name' => 'Teh Botol Sosro',
             'desc' => 'Teh dalam kemasan botol 350ml',
             'price' => 5000,
             'stock' => 50,
             'status' => 'inactive',
+            'created_at' => now(),
+            'updated_at' => null,
         ]);
 
         Product::create([
+            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
             'name' => 'Kopi Kapal Api',
             'desc' => 'Kopi sachet siap seduh',
             'price' => 2000,
             'stock' => 0,
             'status' => 'out-of-stock',
+            'created_at' => now(),
+            'updated_at' => null,
         ]);
 
         Product::create([
+            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
             'name' => 'Produk Draft Testing',
             'desc' => 'Produk ini belum dipublish, buat testing visibility',
             'price' => 10000,
             'stock' => 20,
             'status' => 'draft',
+            'created_at' => now(),
+            'updated_at' => null,
         ]);
     }
 }
