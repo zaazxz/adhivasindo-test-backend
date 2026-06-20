@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductTypeController;
 use App\Http\Controllers\Api\MainController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
 
 Route::get('/', [MainController::class, 'index']);
 
@@ -49,4 +50,12 @@ Route::prefix('product-types')->group(function () {
         Route::match(['put', 'patch'], '/{id}', [ProductTypeController::class, 'update']);
         Route::delete('/{id}', [ProductTypeController::class, 'destroy']);
     });
+});
+
+// Orders
+Route::prefix('orders')->middleware('auth:api')->group(function () {
+    Route::get('/', [OrderController::class, 'index']);
+    Route::post('/', [OrderController::class, 'store']);
+    Route::get('/{id}', [OrderController::class, 'show']);
+    Route::match(['put', 'patch'], '/{id}/status', [OrderController::class, 'updateStatus']);
 });

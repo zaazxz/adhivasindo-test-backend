@@ -44,7 +44,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         ProductType::create([
-            'id' => 'b1c2d3e4-f5g6-7890-1234-567890abcdef',
+            'id' => 'b1c2d3e4-f5e6-7890-1234-567890abcdef',
             'type_name' => 'Soft Drink',
             'created_at' => now(),
             'updated_at' => null,
@@ -63,7 +63,18 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Product::create([
-            'type_id' => 'b1c2d3e4-f5g6-7890-1234-567890abcdef',
+            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+            'name' => 'Beras Sania 5kg',
+            'desc' => 'Beras pulen dan wangi kemasan 5kg',
+            'price' => 85000,
+            'stock' => 5,
+            'status' => 'active',
+            'created_at' => now(),
+            'updated_at' => null,
+        ]);
+
+        Product::create([
+            'type_id' => 'b1c2d3e4-f5e6-7890-1234-567890abcdef',
             'name' => 'Teh Botol Sosro',
             'desc' => 'Teh dalam kemasan botol 350ml',
             'price' => 5000,

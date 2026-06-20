@@ -11,6 +11,28 @@ use Carbon\Carbon;
 
 class ProductController extends Controller
 {
+
+    /**
+     * @OA\Get(
+     *     path="/products",
+     *     tags={"Product"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Products list",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="string", example="uuid"),
+     *             @OA\Property(property="name", type="string", example="Product Name"),
+     *             @OA\Property(property="price", type="integer", example=100000),
+     *             @OA\Property(property="stock", type="integer", example=10),
+     *             @OA\Property(property="status", type="string", example="active"),
+     *             @OA\Property(property="created_at", type="string", example="2024-01-01T00:00:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2024-01-01T00:00:00.000000Z")
+     *         )
+     *     )
+     * )
+     */
+
     // GET: /api/product/
     public function index(Request $request)
     {
@@ -40,6 +62,27 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/products/{id}",
+     *     tags={"Product"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product details",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="string", example="uuid"),
+     *             @OA\Property(property="name", type="string", example="Product Name"),
+     *             @OA\Property(property="price", type="integer", example=100000),
+     *             @OA\Property(property="stock", type="integer", example=10),
+     *             @OA\Property(property="status", type="string", example="active"),
+     *             @OA\Property(property="created_at", type="string", example="2024-01-01T00:00:00.000000Z"),
+     *             @OA\Property(property="updated_at", type="string", example="2024-01-01T00:00:00.000000Z")
+     *         )
+     *     )
+     * )
+     */
+
     // GET: /api/product/{id}
     public function show(Request $request, $id)
     {
@@ -56,6 +99,28 @@ class ProductController extends Controller
 
         return response()->json($product);
     }
+
+    /**
+     * @OA\Post(
+     *     path="/products",
+     *     tags={"Product"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "price", "stock"},
+     *             @OA
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Product created successfully",
+     *         @OA\JsonContent(
+     *             @OA
+     *         )
+     *     )
+     * )
+     */
 
     // POST: /api/product
     public function store(Request $request)
@@ -109,6 +174,35 @@ class ProductController extends Controller
 
         return response()->json($product, 201);
     }
+
+    /**
+     * @OA\Put(
+     *     path="/products/{id}",
+     *     tags={"Product"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string", example="uuid")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "price", "stock"},
+     *             @OA\Property(property="name", type="string", example="Product Name"),
+     *             @OA
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product updated successfully",
+     *         @OA\JsonContent(
+     *             @OA
+     *         )
+     *     )
+     * )
+     */
 
     // PUT/PATCH: /api/product/{id}
     public function update(Request $request, $id)
@@ -173,6 +267,27 @@ class ProductController extends Controller
         return response()->json($product);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/products/{id}",
+     *     tags={"Product"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string", example="uuid")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA
+     *         )
+     *     )
+     * )
+     */
+
     // DELETE: /api/product/{id}
     public function destroy($id)
     {
@@ -190,6 +305,15 @@ class ProductController extends Controller
 
         return response()->json(['message' => 'Product Success Deleted']);
     }
+
+    /**
+     * @OA\Get(
+     *     path="/products/{id}/image",
+     *     tags={"Product"},
+     *     security={{ "bearerAuth": {} }},
+     *     @OA
+     * )
+     */
 
     protected function handleImageUpload(Request $request): array
     {

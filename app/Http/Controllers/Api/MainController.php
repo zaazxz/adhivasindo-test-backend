@@ -8,6 +8,25 @@ use Illuminate\Http\Request;
 
 class MainController extends Controller
 {
+
+    /**
+     * @OA\Get(
+     *     path="/",
+     *     tags={"Main"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Welcome message",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="message", type="string", example="Welcome to the API"),
+     *             @OA\Property(property="version", type="string", example="1.0.0"),
+     *             @OA\Property(property="author", type="string", example="Mirza Qamaruzzaman"),
+     *             @OA\Property(property="date", type="string", example="2024-01-01T00:00:00.000000Z")
+     *         )
+     *     )
+     * )
+     */
+
     // GET: /api/
     public function index(Request $request)
     {
