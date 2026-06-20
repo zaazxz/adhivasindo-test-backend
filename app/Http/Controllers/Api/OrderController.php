@@ -13,35 +13,6 @@ use Illuminate\Support\Facades\Validator;
 class OrderController extends Controller
 {
 
-    /**
-     * @OA\Post(
-     *     path="/orders",
-     *     tags={"Order"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"payment_method", "items"},
-     *             @OA\Property(property="payment_method", type="string", example="cash"),
-     *             @OA\Property(property="items", type="array", @OA\Items(ref="#/components/schemas/OrderDetail"))
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Order created successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="string", example="uuid"),
-     *             @OA\Property(property="user_id", type="string", example="uuid"),
-     *             @OA\Property(property="total_price", type="integer", example=100000),
-     *             @OA\Property(property="status", type="string", example="pending"),
-     *             @OA\Property(property="payment_method", type="string", example="cash"),
-     *             @OA\Property(property="created_at", type="string", example="2024-01-01T00:00:00.000000Z"),
-     *             @OA\Property(property="updated_at", type="string", example="2024-01-01T00:00:00.000000Z")
-     *         )
-     *     )
-     * )
-     */
-
     // POST: /api/orders
     public function store(Request $request) {
 
@@ -138,27 +109,6 @@ class OrderController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *     path="/orders",
-     *     tags={"Order"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Orders list",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="string", example="uuid"),
-     *             @OA\Property(property="user_id", type="string", example="uuid"),
-     *             @OA\Property(property="total_price", type="integer", example=100000),
-     *             @OA\Property(property="status", type="string", example="pending"),
-     *             @OA\Property(property="payment_method", type="string", example="cash"),
-     *             @OA\Property(property="created_at", type="string", example="2024-01-01T00:00:00.000000Z"),
-     *             @OA\Property(property="updated_at", type="string", example="2024-01-01T00:00:00.000000Z")
-     *         )
-     *     )
-     * )
-     */
-
     // GET: /api/orders
     public function index(Request $request) {
 
@@ -178,22 +128,6 @@ class OrderController extends Controller
 
     }
 
-    /**
-     * @OA\Get(
-     *     path="/order/{id}",
-     *     tags={"Order"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Order details",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="string", example="uuid"),
-     *             @OA
-     *         )
-     *     )
-     * )
-     */
-
     // GET: /api/order/{id}
     public function show(Request $request, $id) {
 
@@ -211,34 +145,6 @@ class OrderController extends Controller
         return response()->json($order);
 
     }
-
-    /**
-     * @OA\Put(
-     *     path="/order/{id}/status",
-     *     tags={"Order"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="string", example="uuid")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"status"},
-     *             @OA\Property(property="status", type="string", example="pending")
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Order status updated successfully",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="message", type="string", example="Order status updated successfully")
-     *         )
-     *     )
-     * )
-     */
 
     // PUT/PATCH: /api/order/{id}/status
     public function updateStatus(Request $request, $id) {
@@ -305,3 +211,4 @@ class OrderController extends Controller
     }
 
 }
+

@@ -1,0 +1,1188 @@
+{
+  "info": {
+    "_postman_id": "8c0f0f3a-b3f2-4f55-8c6c-9e59682651e2",
+    "name": "API Documentation Online Shop Adhivasindo",
+    "description": "# API Documentation — Online Shop Adhivasindo\n\nThis collection contains all API endpoints for the **Online Shop Adhivasindo** platform — a RESTful API for managing an online shop including authentication, products, product types, and orders.\n\n## Base URL\n\nAll requests use the `{{apiUrl}}` environment variable as the base URL. Make sure the **Online Shop Adhivasindo** environment is selected before sending requests.\n\n## Authentication\n\nMost endpoints require a **Bearer Token**. Use the **Login** or **Register** endpoint to obtain a token. The token is automatically saved to the `{{token}}` environment variable by the test scripts.\n\n## Environment Variables\n\n| Variable | Description |\n|---|---|\n| `apiUrl` | Base URL of the API server |\n| `token` | Bearer access token (auto-set on login/register/refresh) |\n| `type_id` | ID of the last created/updated product type |\n| `product_id` | ID of the last created product |\n| `product_id_active` | ID of an active product (auto-mapped from Get All Products) |\n| `product_id_inactive` | ID of an inactive product |\n| `product_id_out_of_stock` | ID of an out-of-stock product |\n| `product_id_draft` | ID of a draft product |\n| `product_id_low_stock` | ID of a low-stock product |\n| `order_id` | ID of the last created order |\n\n## Folder Structure\n\n| Folder | Description |\n|---|---|\n| **Config** | Health check and server status |\n| **Authentication** | Register, login, logout, token refresh, and user profile |\n| **Products** | Full CRUD for products |\n| **Product Types** | Full CRUD for product categories |\n| **Orders** | Checkout, order listing, and order status management |",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29572339"
+  },
+  "item": [
+    {
+      "name": "Config",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiUrl}}/",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Checks whether the API server is up and running. No authentication required. Returns a basic status response confirming the service is healthy.\n\n**Endpoint:** `GET {{apiUrl}}/`\n\n**Auth:** None"
+          },
+          "response": []
+        }
+      ],
+      "description": "General configuration and utility endpoints for the Online Shop Adhivasindo API. Use the Health Check endpoint to verify that the API server is running and reachable."
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 200 && response.access_token) {\r",
+                  "    pm.environment.set(\"token\", response.access_token);\r",
+                  "    console.log(\"Token saved:\", response.access_token);\r",
+                  "} else {\r",
+                  "    console.log(\"Register failed, token not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Testing",
+                  "description": "Name",
+                  "type": "text",
+                  "uuid": "9cf58347-b0c8-43e9-98b7-048588dc0c7a"
+                },
+                {
+                  "key": "email",
+                  "value": "test@gmail.com",
+                  "description": "Email",
+                  "type": "text",
+                  "uuid": "b6cc5491-c9f9-4bba-95dd-c6fc24e5c4aa"
+                },
+                {
+                  "key": "password",
+                  "value": "12345678",
+                  "description": "Password",
+                  "type": "text",
+                  "uuid": "9e1c51c5-b8f9-46af-9208-c565ff6800b7"
+                },
+                {
+                  "key": "password_confirmation",
+                  "value": "12345678",
+                  "description": "Password Confirm",
+                  "type": "text",
+                  "uuid": "ecc2a164-4e35-4bc1-9305-bcc435331667"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiUrl}}/auth/register",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Registers a new user account. On success, returns an `access_token` which is automatically saved to the `token` environment variable.\n\n**Endpoint:** `POST {{apiUrl}}/auth/register`\n\n**Auth:** None\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| name | string | Yes | Full name of the user |\n| email | string | Yes | Email address |\n| password | string | Yes | Password (min 8 characters) |\n| password_confirmation | string | Yes | Must match password |"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    pm.environment.unset(\"token\");\r",
+                  "    console.log(\"Token cleared\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/auth/logout",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            },
+            "description": "Logs out the currently authenticated user and invalidates the active Bearer token. The `token` environment variable is automatically cleared upon a successful response.\n\n**Endpoint:** `POST {{apiUrl}}/auth/logout`\n\n**Auth:** Bearer Token (`{{token}}`)"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Logged-in User",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {
+              "accept": true
+            }
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{apiUrl}}/auth/me",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            },
+            "description": "Returns the profile information of the currently authenticated user based on the provided Bearer token.\n\n**Endpoint:** `GET {{apiUrl}}/auth/me`\n\n**Auth:** Bearer Token (`{{token}}`)"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 200 && response.access_token) {\r",
+                  "    pm.environment.set(\"token\", response.access_token);\r",
+                  "    console.log(\"Token saved:\", response.access_token);\r",
+                  "} else {\r",
+                  "    console.log(\"Login failed, token not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "customer@gmail.com",
+                  "description": "Email",
+                  "type": "text",
+                  "uuid": "78a26eaa-4549-4910-aef6-1253cd7c51d4"
+                },
+                {
+                  "key": "password",
+                  "value": "12345678",
+                  "description": "Password",
+                  "type": "text",
+                  "uuid": "c9d346cf-2f48-47cb-b9e4-63417db35226"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiUrl}}/auth/login",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Authenticates an existing user and returns a Bearer access token. The token is automatically saved to the `token` environment variable upon a successful response.\n\n**Endpoint:** `POST {{apiUrl}}/auth/login`\n\n**Auth:** None\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| email | string | Yes | Registered email address |\n| password | string | Yes | Account password |"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 200 && response.access_token) {\r",
+                  "    pm.environment.set(\"token\", response.access_token);\r",
+                  "    console.log(\"Token saved:\", response.access_token);\r",
+                  "} else {\r",
+                  "    console.log(\"Refresh failed, token not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "",
+                "type": "text",
+                "disabled": true
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/auth/refresh",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh"
+              ]
+            },
+            "description": "Issues a new access token using the current valid Bearer token. Use this endpoint to extend the session without requiring the user to log in again. The new token is automatically saved to the `token` environment variable.\n\n**Endpoint:** `POST {{apiUrl}}/auth/refresh`\n\n**Auth:** Bearer Token (`{{token}}`)"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing user authentication. This includes registering a new account, logging in to obtain a Bearer token, refreshing an expired token, checking the currently authenticated user, and logging out. Most other endpoints require a valid Bearer token obtained from the Login or Register endpoints."
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 200 && response.data) {\r",
+                  "    response.data.forEach(p => {\r",
+                  "        if (p.name === 'Indomie Goreng') pm.environment.set('product_id_active', p.id);\r",
+                  "        if (p.name === 'Beras Sania 5kg') pm.environment.set('product_id_low_stock', p.id);\r",
+                  "        if (p.name === 'Teh Botol Sosro') pm.environment.set('product_id_inactive', p.id);\r",
+                  "        if (p.name === 'Kopi Kapal Api') pm.environment.set('product_id_out_of_stock', p.id);\r",
+                  "        if (p.name === 'Produk Draft Testing') pm.environment.set('product_id_draft', p.id);\r",
+                  "    });\r",
+                  "    console.log('All product IDs mapped');\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/products/?per_page=10",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "products",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "teh",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "10"
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all products. Supports filtering by status and searching by name. The test script automatically maps known product names to their respective environment variables (`product_id_active`, `product_id_low_stock`, `product_id_inactive`, `product_id_out_of_stock`, `product_id_draft`).\n\n**Endpoint:** `GET {{apiUrl}}/products/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Query Parameters:**\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| per_page | integer | No | Number of results per page (e.g. `10`) |\n| page | integer | No | Page number for pagination |\n| search | string | No | Search products by name |\n| status | string | No | Filter by status: `active`, `inactive`, `draft`, `out_of_stock`, `low_stock` |"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific Products",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/products/:id",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{product_id}}",
+                  "description": "Product Id"
+                }
+              ]
+            },
+            "description": "Retrieves the details of a single product by its ID.\n\n**Endpoint:** `GET {{apiUrl}}/products/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameters:**\n| Parameter | Description |\n|---|---|\n| id | The unique ID of the product. Use `{{product_id}}` or any specific product ID variable. |"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 201 && response.id) {\r",
+                  "    pm.environment.set(\"product_id\", response.id);\r",
+                  "    console.log(\"product_id saved:\", response.id);\r",
+                  "} else {\r",
+                  "    console.log(\"Create failed, product_id not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Indomie Rebus",
+                  "type": "text",
+                  "uuid": "0ffe9cfa-6481-43a8-93c7-a397781da412"
+                },
+                {
+                  "key": "desc",
+                  "value": "",
+                  "description": "optional",
+                  "type": "text",
+                  "uuid": "ee96895b-8cd3-49ab-bb97-7b0240262e2e"
+                },
+                {
+                  "key": "price",
+                  "value": "3500",
+                  "type": "text",
+                  "uuid": "91ee8612-3a54-4275-8b18-0830cf1171ef"
+                },
+                {
+                  "key": "stock",
+                  "value": "10",
+                  "description": "optional (default '0')",
+                  "type": "text",
+                  "uuid": "518852e9-10ef-43fd-a151-9fc6cba1fbf3"
+                },
+                {
+                  "key": "status",
+                  "value": "draft",
+                  "description": "optional (default 'draft')",
+                  "type": "text",
+                  "uuid": "1bb5fcb4-136b-423f-81b0-d0d962550a9f"
+                },
+                {
+                  "key": "image",
+                  "description": "optional",
+                  "type": "file",
+                  "uuid": "c9f7deae-3779-4100-8e3a-0a2c220523aa",
+                  "src": "/C:/Users/Admin/Downloads/lime color.png"
+                },
+                {
+                  "key": "type_id",
+                  "value": "{{type_id}}",
+                  "type": "text",
+                  "uuid": "a7715f83-aa86-48d5-85cf-f1851bd5253c"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiUrl}}/products/",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "products",
+                ""
+              ]
+            },
+            "description": "Creates a new product. Accepts multipart form-data including an optional product image. On success, the new product's ID is automatically saved to the `product_id` environment variable.\n\n**Endpoint:** `POST {{apiUrl}}/products/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| name | string | Yes | Product name |\n| price | number | Yes | Product price |\n| type_id | string | Yes | ID of the product type. Use `{{type_id}}` |\n| desc | string | No | Product description |\n| stock | integer | No | Stock quantity (default: `0`) |\n| status | string | No | Product status: `draft`, `active`, `inactive` (default: `draft`) |\n| image | file | No | Product image file |"
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 201 && response.id) {\r",
+                  "    pm.environment.set(\"product_id\", response.id);\r",
+                  "    console.log(\"product_id saved:\", response.id);\r",
+                  "} else {\r",
+                  "    console.log(\"Edit failed, product_id not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "name",
+                  "value": "Indomie Rebus",
+                  "type": "text",
+                  "uuid": "0ffe9cfa-6481-43a8-93c7-a397781da412",
+                  "disabled": true
+                },
+                {
+                  "key": "desc",
+                  "value": "Indomie Rebus rasa Ayam Bawang",
+                  "description": "optional",
+                  "type": "text",
+                  "uuid": "ee96895b-8cd3-49ab-bb97-7b0240262e2e"
+                },
+                {
+                  "key": "price",
+                  "value": "3500",
+                  "type": "text",
+                  "uuid": "91ee8612-3a54-4275-8b18-0830cf1171ef",
+                  "disabled": true
+                },
+                {
+                  "key": "stock",
+                  "value": "10",
+                  "description": "optional (default '0')",
+                  "type": "text",
+                  "uuid": "518852e9-10ef-43fd-a151-9fc6cba1fbf3",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "active",
+                  "description": "optional (default 'draft')",
+                  "type": "text",
+                  "uuid": "1bb5fcb4-136b-423f-81b0-d0d962550a9f"
+                },
+                {
+                  "key": "image",
+                  "description": "optional",
+                  "type": "file",
+                  "uuid": "c9f7deae-3779-4100-8e3a-0a2c220523aa",
+                  "src": "/C:/Users/Admin/Downloads/fintra-pallete.jpg"
+                },
+                {
+                  "key": "_method",
+                  "value": "PATCH",
+                  "description": "patch/put",
+                  "type": "text",
+                  "uuid": "6284bf08-fc0b-45cd-884d-b36d3cc69017"
+                },
+                {
+                  "key": "type_id",
+                  "value": "{{type_id}}",
+                  "type": "text",
+                  "uuid": "6bf2c6f7-c736-465a-9117-7679d0c9ee08",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiUrl}}/products/:id",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{product_id}}",
+                  "description": "Product Id"
+                }
+              ]
+            },
+            "description": "Updates an existing product by its ID. Uses method spoofing via the `_method: PATCH` field since the request is sent as `POST` with multipart form-data (required for file uploads).\n\n**Endpoint:** `POST {{apiUrl}}/products/:id` (with `_method: PATCH`)\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameters:**\n| Parameter | Description |\n|---|---|\n| id | The unique ID of the product to update. Use `{{product_id}}`. |\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| _method | string | Yes | Must be `PATCH` or `PUT` for method spoofing |\n| desc | string | No | Updated product description |\n| status | string | No | Updated status: `active`, `inactive`, `draft` |\n| name | string | No | Updated product name |\n| price | number | No | Updated price |\n| stock | integer | No | Updated stock quantity |\n| image | file | No | New product image |\n| type_id | string | No | Updated product type ID |"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    pm.environment.unset(\"product_id\");\r",
+                  "    console.log(\"product_id cleared\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{apiUrl}}/products/:id",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "products",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{product_id}}",
+                  "description": "Product Id"
+                }
+              ]
+            },
+            "description": "Deletes a product by its ID. On success, the `product_id` environment variable is automatically cleared.\n\n**Endpoint:** `DELETE {{apiUrl}}/products/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameters:**\n| Parameter | Description |\n|---|---|\n| id | The unique ID of the product to delete. Use `{{product_id}}`. |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing products in the online shop. Supports listing all products with filtering and pagination, retrieving a single product by ID, creating new products (with image upload), editing existing products, and deleting products. All endpoints require Bearer token authentication."
+    },
+    {
+      "name": "Product Types",
+      "item": [
+        {
+          "name": "Get All Product Types",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiUrl}}/product-types/",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "product-types",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "Soft Drink",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves a list of all available product types/categories. Supports optional search filtering by type name.\n\n**Endpoint:** `GET {{apiUrl}}/product-types/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Query Parameters:**\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| search | string | No | Filter product types by name (e.g. `Soft Drink`) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product Types",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 201 && response.id) {\r",
+                  "    pm.environment.set(\"type_id\", response.id);\r",
+                  "    console.log(\"type_id saved:\", response.id);\r",
+                  "} else {\r",
+                  "    console.log(\"Create failed, token not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "type_name",
+                  "value": "Makanan Ringan",
+                  "type": "text",
+                  "uuid": "74317637-22ce-48e3-ac61-7f7fb8c26dc2"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiUrl}}/product-types",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "product-types"
+              ]
+            },
+            "description": "Creates a new product type/category. On success, the new type's ID is automatically saved to the `type_id` environment variable.\n\n**Endpoint:** `POST {{apiUrl}}/product-types`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| type_name | string | Yes | Name of the product type (e.g. `Makanan Ringan`) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Edit Product Types",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 200 && response.id) {\r",
+                  "    pm.environment.set(\"type_id\", response.id);\r",
+                  "    console.log(\"type_id saved:\", response.id);\r",
+                  "} else {\r",
+                  "    console.log(\"Create failed, token not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "type_name",
+                  "value": "Snack",
+                  "type": "text",
+                  "uuid": "74317637-22ce-48e3-ac61-7f7fb8c26dc2"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{apiUrl}}/product-types/:id",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "product-types",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{type_id}}"
+                }
+              ]
+            },
+            "description": "Updates the name of an existing product type by its ID. On success, the updated type's ID is saved to the `type_id` environment variable.\n\n**Endpoint:** `PATCH {{apiUrl}}/product-types/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameters:**\n| Parameter | Description |\n|---|---|\n| id | The unique ID of the product type to update. Use `{{type_id}}`. |\n\n**Body (form-data):**\n| Field | Type | Required | Description |\n|---|---|---|---|\n| type_name | string | Yes | New name for the product type |"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product Types",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {\r",
+                  "    pm.environment.unset(\"type_id\");\r",
+                  "    console.log(\"type_id cleared\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{apiUrl}}/product-types/:id",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "product-types",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{type_id}}"
+                }
+              ]
+            },
+            "description": "Deletes a product type by its ID. On success, the `type_id` environment variable is automatically cleared.\n\n**Endpoint:** `DELETE {{apiUrl}}/product-types/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameters:**\n| Parameter | Description |\n|---|---|\n| id | The unique ID of the product type to delete. Use `{{type_id}}`. |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing product categories/types. Supports listing all product types (with optional search), creating new types, updating existing types, and deleting types. All endpoints require Bearer token authentication. The `type_id` environment variable is automatically set after creating a product type."
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Checkout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.code === 201 && response.id) {\r",
+                  "    pm.environment.set(\"order_id\", response.id);\r",
+                  "    console.log(\"order_id saved:\", response.id);\r",
+                  "} else {\r",
+                  "    console.log(\"Create failed, order_id not saved\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"payment_method\": \"cash\",\r\n    \"items\": [\r\n        {\r\n            \"product_id\": \"{{product_id_active}}\",\r\n            \"quantity\": 2\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiUrl}}/orders/",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "orders",
+                ""
+              ]
+            },
+            "description": "Places a new order (checkout). Accepts a JSON body with the payment method and a list of items. On success, the new order's ID is automatically saved to the `order_id` environment variable.\n\n**Endpoint:** `POST {{apiUrl}}/orders/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body (JSON):**\n```json\n{\n    \"payment_method\": \"cash\",\n    \"items\": [\n        {\n            \"product_id\": \"{{product_id_active}}\",\n            \"quantity\": 2\n        }\n    ]\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| payment_method | string | Yes | Payment method (e.g. `cash`) |\n| items | array | Yes | List of items to order |\n| items[].product_id | string | Yes | ID of the product. Use `{{product_id_active}}` |\n| items[].quantity | integer | Yes | Quantity to order |"
+          },
+          "response": []
+        },
+        {
+          "name": "Checkout Copy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"paid\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{apiUrl}}/orders/:id/status",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":id",
+                "status"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{order_id}}"
+                }
+              ]
+            },
+            "description": "Updates the status of an existing order by its ID. Use this endpoint to transition an order through its lifecycle (e.g. from `pending` to `paid`).\n\n**Endpoint:** `PATCH {{apiUrl}}/orders/:id/status`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameters:**\n| Parameter | Description |\n|---|---|\n| id | The unique ID of the order to update. Use `{{order_id}}`. |\n\n**Body (JSON):**\n```json\n{\n    \"status\": \"paid\"\n}\n```\n\n| Field | Type | Required | Description |\n|---|---|---|---|\n| status | string | Yes | New order status (e.g. `paid`, `pending`, `cancelled`) |"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiUrl}}/orders/",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "orders",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Retrieves a paginated list of all orders for the authenticated user.\n\n**Endpoint:** `GET {{apiUrl}}/orders/`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Query Parameters:**\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| per_page | integer | No | Number of results per page |\n| page | integer | No | Page number for pagination |"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Specific Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{apiUrl}}/orders/:id",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":id"
+              ],
+              "query": [
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "type": "text",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "{{order_id}}"
+                }
+              ]
+            },
+            "description": "Retrieves the details of a single order by its ID.\n\n**Endpoint:** `GET {{apiUrl}}/orders/:id`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Path Parameters:**\n| Parameter | Description |\n|---|---|\n| id | The unique ID of the order. Use `{{order_id}}`. |"
+          },
+          "response": []
+        }
+      ],
+      "description": "Endpoints for managing customer orders. Supports placing a new order (checkout), listing all orders with pagination, retrieving a specific order by ID, and updating an order's status. All endpoints require Bearer token authentication."
+    }
+  ]
+}

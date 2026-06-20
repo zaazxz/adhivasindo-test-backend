@@ -1,66 +1,121 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Backend Online Shop - PT. Adhikari Inovasi Indonesia (Adhivasindo)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Backend API for an e-commerce / online shop application created to fulfill the technical test (Take Home Test) at **PT. Adhikari Inovasi Indonesia (Adhivasindo)**.
 
-## About Laravel
+This repository only contains the source code for the backend. The frontend source code can be accessed at the following link:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+👉 **Frontend Repository**: [Insert Frontend Link Here]
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🚀 Tech Stack & Versioning
 
-## Learning Laravel
+This application is built using the following environment and technologies:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- **PHP**: `>= 8.2`
+- **Framework**: Laravel `^11.31`
+- **Database**: MySQL
+- **Authentication**: JWT (JSON Web Token) via the `tymon/jwt-auth` `^2.3` package
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 📖 API Documentation (Postman)
 
-## Laravel Sponsors
+The complete API documentation has been exported as a **Postman Collection** to make it easy to test and integrate.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+You can access and use it by following these steps:
 
-### Premium Partners
+1. Open the `public/docs/` folder in this project directory.
+2. Find the file named `API-Documentation-Online-Shop-Adhivasindo.postman_collection.json`.
+3. Open the **Postman** application, then click the **Import** button.
+4. Select (or _drag-and-drop_) the JSON file.
+5. The collection, along with all endpoints and environment variables, will automatically be available in your Postman workspace and ready to use.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+---
 
-## Contributing
+## 🛠️ Installation & Setup
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Follow the steps below to install and run the application on your local machine (Localhost).
 
-## Code of Conduct
+### 1. Prerequisites
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Make sure you have the following software installed on your machine:
 
-## Security Vulnerabilities
+- PHP >= 8.2
+- Composer
+- MySQL (or any other database supported by Laravel)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 2. Installation Steps
 
-## License
+**Clone this repository:**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+git clone <YOUR_REPO_URL>
+cd be-olshop-adivashindo
+```
+
+**Install PHP Dependencies:**
+
+```bash
+composer install
+```
+
+**Environment File Configuration:**
+Copy the default Laravel environment template (`.env.example`) to `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Open the `.env` file in your text editor and configure your database credentials:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+**Generate Application Key & JWT Secret Key:**
+
+```bash
+php artisan key:generate
+php artisan jwt:secret
+```
+
+**Run Database Migrations and Seeders:**
+This step will create the necessary tables in your database and populate them with initial dummy data.
+
+```bash
+php artisan migrate --seed
+```
+
+**Create a Storage Symlink:**
+To ensure uploaded images/files (such as product photos) can be accessed publicly, run:
+
+```bash
+php artisan storage:link
+```
+
+### 3. Running the Local Server
+
+Run the following command to start the development server:
+
+```bash
+php artisan serve
+```
+
+By default, the application will be accessible at: `http://localhost:8000`
+
+---
+
+## 🔐 Roles & Authentication
+
+This application uses JWT Tokens for authentication. A valid token is required to access protected endpoints. Access rights are managed between users with the **Admin** and **Customer** roles.
+
+- **Admin**: Has full access rights to create, edit, and delete products and product categories. Admins can also view all orders.
+- **Customer**: Can only view active products, create orders (checkout), and view their own order history.
+
+---

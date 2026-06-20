@@ -10,22 +10,6 @@ use Illuminate\Support\Facades\Validator;
 class ProductTypeController extends Controller
 {
 
-    /**
-     * @OA\Get(
-     *     path="/product-types",
-     *     tags={"Product Type"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Product type list",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="string", example="uuid"),
-     *             @OA
-     *         )
-     *     )
-     * )
-     */
-
     // GET: /api/product-types
     public function index(Request $request)
     {
@@ -46,28 +30,6 @@ class ProductTypeController extends Controller
 
         return response()->json($types);
     }
-
-    /**
-     * @OA\Post(
-     *     path="/product-types",
-     *     tags={"Product Type"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"type_name"},
-     *             @OA
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Product type created successfully",
-     *         @OA\JsonContent(
-     *             @OA
-     *         )
-     *     )
-     * )
-     */
 
     // POST: /api/product-types
     public function store(Request $request)
@@ -94,34 +56,6 @@ class ProductTypeController extends Controller
 
         return response()->json($type, 201);
     }
-
-    /**
-     * @OA\Put(
-     *     path="/product-types/{id}",
-     *     tags={"Product Type"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="string", example="uuid")
-     *     ),
-     *     @OA\RequestBody(
-     *         required=true,
-     *         @OA\JsonContent(
-     *             required={"type_name"},
-     *             @OA
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Product type updated successfully",
-     *         @OA\JsonContent(
-     *             @OA
-     *         )
-     *     )
-     * )
-     */
 
     // PUT/PATCH: /api/product-types/{id}
     public function update(Request $request, string $id)
@@ -154,34 +88,6 @@ class ProductTypeController extends Controller
         return response()->json($type);
     }
 
-    /**
-     * @OA\Delete(
-     *     path="/product-types/{id}",
-     *     tags={"Product Type"},
-     *     security={{ "bearerAuth": {} }},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="string", example="uuid")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Product type deleted successfully",
-     *         @OA\JsonContent(
-     *             @OA
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Product type not found",
-     *         @OA\JsonContent(
-     *             @OA
-     *         )
-     *     )
-     * )
-     */
-
     // DELETE: /api/product-types/{id}
     public function destroy(string $id)
     {
@@ -197,3 +103,4 @@ class ProductTypeController extends Controller
         return response()->json(['message' => 'Product type deleted successfully']);
     }
 }
+

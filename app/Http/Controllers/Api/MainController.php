@@ -5,27 +5,29 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use OpenApi\Attributes as OA;
 
+/**
+ * @OA\Info(
+ *     title="Adhivasindo Online Shop API",
+ *     version="1.0.0",
+ *     description="API Documentation Online Shop for Take Home Test from PT. Adhikari Inovasi Indonesia (Adhivasindo)"
+ * )
+ *
+ * @OA\Server(
+ *     url="/api",
+ *     description="API Server"
+ * )
+ *
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT"
+ * )
+ */
 class MainController extends Controller
 {
-
-    /**
-     * @OA\Get(
-     *     path="/",
-     *     tags={"Main"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="Welcome message",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="status", type="string", example="success"),
-     *             @OA\Property(property="message", type="string", example="Welcome to the API"),
-     *             @OA\Property(property="version", type="string", example="1.0.0"),
-     *             @OA\Property(property="author", type="string", example="Mirza Qamaruzzaman"),
-     *             @OA\Property(property="date", type="string", example="2024-01-01T00:00:00.000000Z")
-     *         )
-     *     )
-     * )
-     */
 
     // GET: /api/
     public function index(Request $request)
