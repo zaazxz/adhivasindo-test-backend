@@ -97,7 +97,7 @@ class OrderController extends Controller
                 return $order;
             });
 
-            return response()->json($order->load('orderDetails.product'), 201);
+            return response()->json($order->load(['orderDetails.product', 'user']), 201);
 
         } catch (\Exception $e) {
 
@@ -113,7 +113,7 @@ class OrderController extends Controller
     public function index(Request $request) {
 
         $user = $request->user();
-        $query = Order::with('orderDetails.product')->latest();
+        $query = Order::with(['orderDetails.product', 'user'])->latest();
 
         if ($user->role !== 'admin') {
             $query->where('user_id', $user->id);
@@ -206,7 +206,7 @@ class OrderController extends Controller
             $order->update(['status' => $request->status]);
         }
 
-        return response()->json($order->load('orderDetails.product'));
+        return response()->json($order->load(['orderDetails.product', 'user']));
 
     }
 
