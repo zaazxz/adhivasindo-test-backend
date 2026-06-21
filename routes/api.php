@@ -25,6 +25,7 @@ Route::prefix('auth')->group(function () {
 // Products
 Route::prefix('products')->group(function () {
     Route::middleware('optional.auth')->group(function () {
+        Route::get('/best-sellers', [ProductController::class, 'bestSellers']);
         Route::get('/', [ProductController::class, 'index']);
         Route::get('/{id}', [ProductController::class, 'show']);
     });

@@ -492,6 +492,52 @@
       "name": "PRODUCTS",
       "item": [
         {
+          "name": "GET_BEST_SELLERS",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/products/best-sellers?limit=10",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "products",
+                "best-sellers"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "type": "text"
+                }
+              ]
+            },
+            "description": "Retrieves a list of the best-selling products based on order quantities.\n\n**Endpoint:** `GET {{apiUrl}}/products/best-sellers`\n\n**Auth:** Not required (Optional Bearer Token)\n\n**Query Parameters:**\n| Parameter | Type | Required | Description |\n|---|---|---|---|\n| limit | integer | No | Number of best-selling products to return (default: `10`) |\n\n**Example:** `GET {{apiUrl}}/products/best-sellers?limit=5`\n\n**Success Response (200):** Returns a list of the top-selling products ordered by `sold_count`."
+          },
+          "response": []
+        },
+        {
           "name": "GET_PRODUCTS",
           "event": [
             {

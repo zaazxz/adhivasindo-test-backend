@@ -16,7 +16,7 @@ class ProductController extends Controller
     public function index(Request $request)
     {
 
-        $query = Product::query();
+        $query = Product::query()->withSum('orderDetails as sold_count', 'quantity');
 
         // Customer only can see product 'active' & 'out of stock', admin can see all status
         $user = $request->user();
@@ -41,10 +41,24 @@ class ProductController extends Controller
         return response()->json($products);
     }
 
+    // GET: /api/products/best-sellers
+    public function bestSellers(Request $request)
+    {
+        $limit = $request->get('limit', 10);
+        $products = Product::whereIn('status', ['active', 'out-of-stock'])
+            ->withSum('orderDetails as sold_count', 'quantity')
+            ->with('type')
+            ->orderByDesc('sold_count')
+            ->take($limit)
+            ->get();
+
+        return response()->json($products);
+    }
+
     // GET: /api/product/{id}
     public function show(Request $request, $id)
     {
-        $product = Product::find($id);
+        $product = Product::withSum('orderDetails as sold_count', 'quantity')->find($id);
 
         if (!$product) {
             return response()->json(['message' => 'Product Not Found'], 404);
