@@ -119,3 +119,24 @@ This application uses JWT Tokens for authentication. A valid token is required t
 - **Customer**: Can only view active products, create orders (checkout), and view their own order history.
 
 ---
+
+## ⚠️ Note on Mocked / Dummy Features
+
+Because this application was built specifically for a technical test, several complex real-world features are intentionally simplified and use dummy data or mocked processes:
+
+1. **Payment Gateway Integration**: The checkout and payment process does not connect to a real payment gateway (such as Midtrans, Xendit, or Stripe). When a user creates an order, the transaction is automatically processed or uses dummy successful statuses.
+2. **Shipping / Courier API**: Shipping cost calculations and courier selections are not integrated with any real third-party API (like RajaOngkir). Shipping data might be mocked or omitted.
+3. **Email Notifications**: Triggers for user registration, order confirmation invoices, or password resets do not send actual emails to users.
+4. **Database Seeders**: The data populated during the installation step (`php artisan db:seed`) consists of dummy users, dummy products, and dummy product categories generated using Laravel Faker to facilitate immediate testing.
+
+---
+
+## 🚀 Future Improvements (Next Progress)
+
+To make this application a complete, production-ready system, the following improvements are planned for the next development phase:
+
+1. **API Enhancements & Additions**: Improving existing endpoints, adding deeper validation, and creating new API features to support a more comprehensive e-commerce flow.
+2. **Third-Party Integrations**: Integrating with a real Payment Gateway (e.g., Midtrans/Xendit) and live Shipping/Courier APIs along with Maps integration for real-time tracking.
+3. **Replacing Mock Data**: Completely replacing all dummy data and mocked processes with dynamic, real-world data handling.
+
+---
