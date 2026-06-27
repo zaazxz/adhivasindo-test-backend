@@ -272,6 +272,84 @@
             "description": "Logs out of the system and invalidates the currently active JWT token. The `{{token}}` variable is automatically cleared after a successful logout.\n\n**Endpoint:** `POST {{apiUrl}}/auth/logout`\n\n**Auth:** Bearer Token (`{{token}}`)\n\n**Body:** Not required\n\n**Success Response (200):** Token successfully invalidated on the server side.\n\n> ⚠️ After logging out, the old token can no longer be used. You must `LOGIN` again to obtain a new token."
           },
           "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Budi Santoso\",\n    \"email\": \"budi@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/profile",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"current_password\": \"passwordlama123\",\n    \"password\": \"passwordbaru123\",\n    \"password_confirmation\": \"passwordbaru123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/change-password",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
         }
       ],
       "description": "This folder contains all endpoints related to user authentication, including registration, login, viewing your profile, refreshing the token, and logging out.\n\n**Recommended usage order:**\n1. `REGISTER` — create a new account (if you don't have one)\n2. `LOGIN` — sign in and receive a JWT token\n3. `ME` — check your profile data\n4. `REFRESH_TOKEN` — renew the token before it expires\n5. `LOGOUT` — sign out and invalidate the token\n\n> 🔑 After a successful `LOGIN`, the JWT token is automatically saved to the `{{token}}` variable and can be used immediately across all other endpoints."

@@ -91,10 +91,8 @@ class ProductController extends Controller
 
         $data = $request->only(['type_id', 'name', 'desc', 'price', 'stock', 'status']);
 
-        // auto set 'out of stock' if stock is 0 and status is not set
-        if (!$request->has('status') && (int) $request->stock === 0) {
-            $data['status'] = 'out-of-stock';
-        }
+        // 1. product yang baru dibuat mau itu ada stock nya atau ga ada stock nya akan berstatus draft
+        $data['status'] = 'draft';
 
         // handle image upload
         $imageResult = $this->handleImageUpload($request);
@@ -116,7 +114,7 @@ class ProductController extends Controller
         $product->price = $data['price'];
         $product->stock = $data['stock'];
         $product->image = $data['image'] ?? null;
-        $product->status = $data['status'] ?? 'draft';
+        $product->status = $data['status'];
         $product->timestamps = false;
         $product->created_at = now();
         $product->updated_at = null;
@@ -150,8 +148,13 @@ class ProductController extends Controller
 
         $data = $request->only(['type_id', 'name', 'desc', 'price', 'stock', 'status']);
 
-        // auto set 'out of stock' if stock is 0 and status is not set
-        if ($request->has('stock') && !$request->has('status') && (int) $request->stock === 0) {
+        $newStock = array_key_exists('stock', $data) ? (int) $data['stock'] : (int) $product->stock;
+
+        if ($product->status === 'out-of-stock' && $newStock > 0) {
+            // 2. product yang awalnya out-of-stock pas ditambah stock jangan langsung aktif tapi draft dulu
+            $data['status'] = 'draft';
+        } elseif ($newStock === 0) {
+            // jika stock jadi 0, harus out-of-stock
             $data['status'] = 'out-of-stock';
         }
 
