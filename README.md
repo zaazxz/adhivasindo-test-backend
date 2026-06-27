@@ -120,6 +120,16 @@ This application uses JWT Tokens for authentication. A valid token is required t
 
 ---
 
+## 📦 Product Status Workflow
+
+The application implements specific business logic for managing product statuses (e.g., `draft`, `active`) on the backend to ensure consistent state management:
+
+1. **New Product Creation**: All newly created products are automatically set to `draft` status, regardless of their initial stock availability.
+2. **Stock Replenishment**: If a product's stock is updated and it transitions from `out-of-stock` to `in-stock`, its status will automatically revert to `draft`.
+3. **Manual Activation**: Products must be manually reviewed and activated (status changed to `active`) by an Admin before they become visible to customers.
+
+---
+
 ## ⚠️ Note on Mocked / Dummy Features
 
 Because this application was built specifically for a technical test, several complex real-world features are intentionally simplified and use dummy data or mocked processes:
