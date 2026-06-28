@@ -19,6 +19,13 @@ This application is built using the following environment and technologies:
 
 ---
 
+## ✨ What's New (Latest Updates)
+
+- **Comprehensive API Development**: Fully implemented Authentication, Product Management (CRUD), and Order Management APIs.
+- **Order Processing & Inventory**: Added atomic inventory updates and automatic status transitions during the checkout process.
+- **Product Status Workflow**: Added robust backend logic to handle `draft` and `active` product states (newly created or restocked products are automatically drafted).
+- **Rich Seed Data**: Upgraded the database seeder to automatically populate 10 product categories and 20 varied sample products for a more realistic testing environment.
+
 ## 📖 API Documentation (Postman)
 
 The complete API documentation has been exported as a **Postman Collection** to make it easy to test and integrate.
@@ -137,7 +144,7 @@ Because this application was built specifically for a technical test, several co
 1. **Payment Gateway Integration**: The checkout and payment process does not connect to a real payment gateway (such as Midtrans, Xendit, or Stripe). When a user creates an order, the transaction is automatically processed or uses dummy successful statuses.
 2. **Shipping / Courier API**: Shipping cost calculations and courier selections are not integrated with any real third-party API (like RajaOngkir). Shipping data might be mocked or omitted.
 3. **Email Notifications**: Triggers for user registration, order confirmation invoices, or password resets do not send actual emails to users.
-4. **Database Seeders**: The data populated during the installation step (`php artisan db:seed`) consists of dummy users, dummy products, and dummy product categories generated using Laravel Faker to facilitate immediate testing.
+4. **Database Seeders**: The data populated during the installation step (`php artisan db:seed`) consists of dummy users (Admin & Customer), along with 10 product categories and 20 sample products across various categories to facilitate immediate and realistic testing.
 
 ---
 

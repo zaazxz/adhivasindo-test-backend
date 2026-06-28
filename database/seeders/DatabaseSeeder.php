@@ -10,100 +10,109 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // Admin user
+        // =========================
+        // USERS
+        // =========================
+
         User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'admin',
             'created_at' => now(),
-            'updated_at' => null,
         ]);
 
-        // Customer user
         User::create([
             'name' => 'Customer',
             'email' => 'customer@gmail.com',
             'password' => Hash::make('12345678'),
             'role' => 'customer',
             'created_at' => now(),
-            'updated_at' => null,
         ]);
 
-        // Sample Product Type
-        ProductType::create([
-            'id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
-            'type_name' => 'Makanan Pokok',
-            'created_at' => now(),
-            'updated_at' => null,
-        ]);
+        // =========================
+        // PRODUCT TYPES (10 DATA)
+        // =========================
 
-        ProductType::create([
-            'id' => 'b1c2d3e4-f5e6-7890-1234-567890abcdef',
-            'type_name' => 'Soft Drink',
-            'created_at' => now(),
-            'updated_at' => null,
-        ]);
+        $types = [
+            ['id' => 'a1b2c3d4-0001-0001-0001-000000000001', 'type_name' => 'Makanan Pokok'],
+            ['id' => 'a1b2c3d4-0002-0002-0002-000000000002', 'type_name' => 'Minuman'],
+            ['id' => 'a1b2c3d4-0003-0003-0003-000000000003', 'type_name' => 'Snack'],
+            ['id' => 'a1b2c3d4-0004-0004-0004-000000000004', 'type_name' => 'Sembako'],
+            ['id' => 'a1b2c3d4-0005-0005-0005-000000000005', 'type_name' => 'Elektronik'],
+            ['id' => 'a1b2c3d4-0006-0006-0006-000000000006', 'type_name' => 'Fashion'],
+            ['id' => 'a1b2c3d4-0007-0007-0007-000000000007', 'type_name' => 'Kesehatan'],
+            ['id' => 'a1b2c3d4-0008-0008-0008-000000000008', 'type_name' => 'Otomotif'],
+            ['id' => 'a1b2c3d4-0009-0009-0009-000000000009', 'type_name' => 'Rumah Tangga'],
+            ['id' => 'a1b2c3d4-0010-0010-0010-000000000010', 'type_name' => 'ATK'],
+        ];
 
-        // Sample products
-        Product::create([
-            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
-            'name' => 'Indomie Goreng',
-            'desc' => 'Mie instan goreng favorit semua orang',
-            'price' => 3500,
-            'stock' => 100,
-            'status' => 'active',
-            'created_at' => now(),
-            'updated_at' => null,
-        ]);
+        foreach ($types as $type) {
+            ProductType::create([
+                'id' => $type['id'],
+                'type_name' => $type['type_name'],
+                'created_at' => now(),
+            ]);
+        }
 
-        Product::create([
-            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
-            'name' => 'Beras Sania 5kg',
-            'desc' => 'Beras pulen dan wangi kemasan 5kg',
-            'price' => 85000,
-            'stock' => 5,
-            'status' => 'active',
-            'created_at' => now(),
-            'updated_at' => null,
-        ]);
+        // =========================
+        // PRODUCTS (20 DATA)
+        // =========================
 
-        Product::create([
-            'type_id' => 'b1c2d3e4-f5e6-7890-1234-567890abcdef',
-            'name' => 'Teh Botol Sosro',
-            'desc' => 'Teh dalam kemasan botol 350ml',
-            'price' => 5000,
-            'stock' => 50,
-            'status' => 'inactive',
-            'created_at' => now(),
-            'updated_at' => null,
-        ]);
+        $products = [
+            // Makanan Pokok
+            ['type_id' => $types[0]['id'], 'name' => 'Beras 5kg', 'price' => 85000, 'stock' => 10],
+            ['type_id' => $types[0]['id'], 'name' => 'Indomie Goreng', 'price' => 3500, 'stock' => 100],
 
-        Product::create([
-            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
-            'name' => 'Kopi Kapal Api',
-            'desc' => 'Kopi sachet siap seduh',
-            'price' => 2000,
-            'stock' => 0,
-            'status' => 'out-of-stock',
-            'created_at' => now(),
-            'updated_at' => null,
-        ]);
+            // Minuman
+            ['type_id' => $types[1]['id'], 'name' => 'Teh Botol', 'price' => 5000, 'stock' => 50],
+            ['type_id' => $types[1]['id'], 'name' => 'Aqua 600ml', 'price' => 3000, 'stock' => 200],
 
-        Product::create([
-            'type_id' => 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
-            'name' => 'Produk Draft Testing',
-            'desc' => 'Produk ini belum dipublish, buat testing visibility',
-            'price' => 10000,
-            'stock' => 20,
-            'status' => 'draft',
-            'created_at' => now(),
-            'updated_at' => null,
-        ]);
+            // Snack
+            ['type_id' => $types[2]['id'], 'name' => 'Chitato', 'price' => 12000, 'stock' => 40],
+            ['type_id' => $types[2]['id'], 'name' => 'Taro', 'price' => 10000, 'stock' => 60],
+
+            // Sembako
+            ['type_id' => $types[3]['id'], 'name' => 'Gula 1kg', 'price' => 14000, 'stock' => 30],
+            ['type_id' => $types[3]['id'], 'name' => 'Minyak 1L', 'price' => 17000, 'stock' => 25],
+
+            // Elektronik
+            ['type_id' => $types[4]['id'], 'name' => 'Mouse Logitech', 'price' => 120000, 'stock' => 15],
+            ['type_id' => $types[4]['id'], 'name' => 'Keyboard Mechanical', 'price' => 350000, 'stock' => 8],
+
+            // Fashion
+            ['type_id' => $types[5]['id'], 'name' => 'Kaos Polos', 'price' => 50000, 'stock' => 20],
+            ['type_id' => $types[5]['id'], 'name' => 'Hoodie', 'price' => 150000, 'stock' => 12],
+
+            // Kesehatan
+            ['type_id' => $types[6]['id'], 'name' => 'Masker', 'price' => 20000, 'stock' => 100],
+            ['type_id' => $types[6]['id'], 'name' => 'Hand Sanitizer', 'price' => 25000, 'stock' => 70],
+
+            // Otomotif
+            ['type_id' => $types[7]['id'], 'name' => 'Oli Motor', 'price' => 45000, 'stock' => 30],
+            ['type_id' => $types[7]['id'], 'name' => 'Busi Motor', 'price' => 15000, 'stock' => 50],
+
+            // Rumah Tangga
+            ['type_id' => $types[8]['id'], 'name' => 'Sabun Cuci', 'price' => 8000, 'stock' => 90],
+            ['type_id' => $types[8]['id'], 'name' => 'Sapu', 'price' => 25000, 'stock' => 25],
+
+            // ATK
+            ['type_id' => $types[9]['id'], 'name' => 'Pulpen', 'price' => 3000, 'stock' => 300],
+            ['type_id' => $types[9]['id'], 'name' => 'Buku Tulis', 'price' => 5000, 'stock' => 150],
+        ];
+
+        foreach ($products as $p) {
+            Product::create([
+                'type_id' => $p['type_id'],
+                'name' => $p['name'],
+                'desc' => $p['name'] . ' berkualitas tinggi',
+                'price' => $p['price'],
+                'stock' => $p['stock'],
+                'status' => 'active',
+                'created_at' => now(),
+            ]);
+        }
     }
 }
