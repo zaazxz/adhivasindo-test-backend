@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "e57e5345-094e-44e3-8b44-b82873339701",
+    "_postman_id": "ddaafae5-a002-4c69-aeaf-b5b44b2bba94",
     "name": "BE_ONLINE_SHOP_ADHIVASINDO",
     "description": "# BE_ONLINE_SHOP_ADHIVASINDO\n\nAPI documentation for the **Online Shop Adhivasindo** backend application. This API is built with **Laravel** and uses **JWT (JSON Web Token)**-based authentication.\n\n---\n\n## 🚀 Getting Started\n\nFollow these steps in order to use all endpoints correctly:\n\n1. **Make sure the server is running** at `http://localhost:8000`\n2. **Set the environment** to `Online Shop Adhivasindo` (or the appropriate environment)\n3. **REGISTER** or **LOGIN** first — the JWT token will be automatically saved to the `{{token}}` variable\n4. Once logged in, all endpoints that require authentication are ready to use\n\n---\n\n## 🔐 Authentication\n\nAll endpoints (except `REGISTER` and `LOGIN`) require a **Bearer Token** in the header:\n\n```\nAuthorization: Bearer {{token}}\n```\n\nThis token is automatically saved to the `{{token}}` environment variable after a successful login.\n\n---\n\n## 📌 Important Note on IDs\n\n> ⚠️ **All IDs in this API use UUID format** (example: `a1b2c3d4-e5f6-7890-1234-567890abcdef`)\n\nUUIDs **cannot be guessed or made up**. Here's how to get the correct IDs:\n- **`type_id`** → Get it from the `GET /product-types` endpoint response (PRODUCT_TYPES folder)\n- **`product_id`** → Get it from the `GET /products/` or `POST /products/` endpoint response (PRODUCTS folder)\n- **`order_id`** → Get it from the `GET /orders/` or `POST /orders/` endpoint response (ORDERS folder)\n\n---\n\n## 📂 Collection Structure\n\n| Folder | Purpose |\n|---|---|\n| `API_CHECKING` | Check whether the API server is running |\n| `AUTHENTICATION` | Register, login, view profile, refresh token, logout |\n| `PRODUCT_TYPES` | Manage product types / categories |\n| `PRODUCTS` | Manage products (including image upload) |\n| `ORDERS` | Manage orders / checkout |\n\n---\n\n## 🌐 Base URL\n\n```\nhttp://localhost:8000/api\n```\n\nUse the `{{apiUrl}}` variable in your environment to easily switch the base URL.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
@@ -274,8 +274,18 @@
           "response": []
         },
         {
-          "name": "Update Profile",
+          "name": "UPDATE_PROFILE",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "PATCH",
             "header": [
               {
@@ -299,22 +309,35 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/auth/profile",
+              "raw": "http://localhost:8000/api/auth/profile",
+              "protocol": "http",
               "host": [
-                "{{base_url}}"
+                "localhost"
               ],
+              "port": "8000",
               "path": [
                 "api",
                 "auth",
                 "profile"
               ]
-            }
+            },
+            "description": "## UPDATE_PROFILE\n\nUpdates the authenticated user's profile information. This endpoint allows a logged-in user to modify their `name` and/or `email` address.\n\n---\n\n### Authentication\n\nThis endpoint requires a valid Bearer token. Include the token in the `Authorization` header:\n\n```\nAuthorization: Bearer {{token}}\n```\n\n---\n\n### Request Details\n\n| Property | Value |\n|----------|-------|\n| **Method** | `PATCH` |\n| **URL** | `{{base_url}}/api/auth/profile` |\n| **Content-Type** | `application/json` |\n\n---\n\n### Request Body Fields\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `name` | `string` | Optional | The new display name for the user. |\n| `email` | `string` | Optional | The new email address for the user. |\n\n**Example Body:**\n```json\n{\n    \"name\": \"Budi Santoso\",\n    \"email\": \"budi@example.com\"\n}\n```\n\n---\n\n### Notes\n\n- Uses **PATCH** method, meaning only the fields provided in the request body will be updated (partial update).\n- **Authentication is required.** Requests without a valid `{{token}}` will be rejected.\n- The `Accept: application/json` header ensures the response is returned in JSON format."
           },
           "response": []
         },
         {
-          "name": "Change Password",
+          "name": "CHANGE_PASSWORD",
           "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
             "method": "POST",
             "header": [
               {
@@ -338,21 +361,24 @@
               }
             },
             "url": {
-              "raw": "{{base_url}}/api/auth/change-password",
+              "raw": "http://localhost:8000/api/auth/change-password",
+              "protocol": "http",
               "host": [
-                "{{base_url}}"
+                "localhost"
               ],
+              "port": "8000",
               "path": [
                 "api",
                 "auth",
                 "change-password"
               ]
-            }
+            },
+            "description": "## Change Password\n\nChanges the authenticated user's password. The user must provide their current password along with the new password and its confirmation.\n\n---\n\n## Authentication\n\nThis endpoint requires a valid Bearer token passed via the `Authorization` header.\n\n| Header          | Value                  |\n|-----------------|------------------------|\n| `Authorization` | `Bearer {{token}}`     |\n| `Accept`        | `application/json`     |\n\n---\n\n## Request Body\n\nThe request body must be sent as **raw JSON**.\n\n| Field                  | Type     | Required | Description                                                        |\n|------------------------|----------|----------|--------------------------------------------------------------------|\n| `current_password`     | `string` | ✅ Yes   | The user's current (old) password.                                 |\n| `password`             | `string` | ✅ Yes   | The new password to set.                                           |\n| `password_confirmation`| `string` | ✅ Yes   | Confirmation of the new password. Must match the `password` field. |\n\n---\n\n## Example Request Body\n\n```json\n{\n    \"current_password\": \"passwordlama123\",\n    \"password\": \"passwordbaru123\",\n    \"password_confirmation\": \"passwordbaru123\"\n}\n```\n\n---\n\n## Expected Responses\n\n| Status Code | Description                                                                 |\n|-------------|-----------------------------------------------------------------------------|\n| `200 OK`    | Password changed successfully.                                              |\n| `401 Unauthenticated` | The Bearer token is missing, expired, or invalid.                |\n| `422 Unprocessable Entity` | Validation failed (e.g., `password` and `password_confirmation` do not match, or `current_password` is incorrect). |"
           },
           "response": []
         }
       ],
-      "description": "This folder contains all endpoints related to user authentication, including registration, login, viewing your profile, refreshing the token, and logging out.\n\n**Recommended usage order:**\n1. `REGISTER` — create a new account (if you don't have one)\n2. `LOGIN` — sign in and receive a JWT token\n3. `ME` — check your profile data\n4. `REFRESH_TOKEN` — renew the token before it expires\n5. `LOGOUT` — sign out and invalidate the token\n\n> 🔑 After a successful `LOGIN`, the JWT token is automatically saved to the `{{token}}` variable and can be used immediately across all other endpoints."
+      "description": "This folder contains all endpoints related to user authentication, including registration, login, viewing and updating your profile, refreshing the token, changing your password, and logging out.\n\n## 📋 Endpoints Overview\n\n| # | Request | Method | Endpoint | Auth Required |\n|---|---------|--------|----------|---------------|\n| 1 | `REGISTER` | `POST` | `/api/auth/register` | ❌ None |\n| 2 | `LOGIN` | `POST` | `/api/auth/login` | ❌ None |\n| 3 | `ME` | `GET` | `/api/auth/me` | ✅ Bearer `{{token}}` |\n| 4 | `REFRESH_TOKEN` | `POST` | `/api/auth/refresh` | ✅ Bearer `{{token}}` |\n| 5 | `LOGOUT` | `POST` | `/api/auth/logout` | ✅ Bearer `{{token}}` |\n| 6 | `UPDATE_PROFILE` | `PATCH` | `/api/auth/profile` | ✅ Bearer `{{token}}` |\n| 7 | `CHANGE_PASSWORD` | `POST` | `/api/auth/change-password` | ✅ Bearer `{{token}}` |\n\n## 📝 Endpoint Descriptions\n\n- **REGISTER** — Create a new user account. No authentication required.\n- **LOGIN** — Sign in with your credentials and receive a JWT token.\n- **ME** — Retrieve the currently authenticated user's profile data.\n- **REFRESH_TOKEN** — Renew the JWT token before it expires to maintain an active session.\n- **LOGOUT** — Sign out and invalidate the current token.\n- **UPDATE_PROFILE** — Update the authenticated user's profile information (e.g. name, email).\n- **CHANGE_PASSWORD** — Change the authenticated user's password by providing the current and new password.\n\n## 🔁 Recommended Usage Order\n\n1. `REGISTER` — Create a new account (if you don't have one)\n2. `LOGIN` — Sign in and receive a JWT token\n3. `ME` — Verify your profile data\n4. `UPDATE_PROFILE` — Update your profile information as needed\n5. `CHANGE_PASSWORD` — Change your password if required\n6. `REFRESH_TOKEN` — Renew the token before it expires\n7. `LOGOUT` — Sign out and invalidate the token\n\n> 🔑 After a successful `LOGIN`, the JWT token is automatically saved to the `{{token}}` variable and can be used immediately across all other authenticated endpoints."
     },
     {
       "name": "PRODUCT_TYPES",
